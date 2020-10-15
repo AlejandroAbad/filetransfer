@@ -18,26 +18,24 @@ class CliParamsBuilder {
 		//
 	}
 
-	public void setTransferProtocol(String transferProtocolName) {
+	public void setTransferProtocol(String transferProtocolName) throws CliParseException {
 
 		transferProtocolName = transferProtocolName.toUpperCase();
-		this.transferProtocol = TransferProtocol.valueOf(transferProtocolName);
+		this.transferProtocol = TransferProtocol.fromName(transferProtocolName);
 
 		if (this.transferProtocol == null) {
-			System.err.println("No se reconoce el protocolo " + transferProtocolName);
-			System.exit(1);	
+			throw new CliParseException("No se reconoce el protocolo " + transferProtocolName);
 		}
 
 	}
 
-	public void setTransferDirection(String directionName) {
+	public void setTransferDirection(String directionName) throws CliParseException {
 
 		directionName = directionName.toUpperCase();
-		this.direction = TransferDirection.valueOf(directionName);
+		this.direction = TransferDirection.fromName(directionName);
 
 		if (this.direction == null) {
-			System.err.println("No se reconoce el sentido de la comunicación " + directionName + ". Indique UPLOAD o DOWNLOAD");
-			System.exit(1);
+			throw new CliParseException("No se reconoce el sentido de la comunicación. Indique UPLOAD o DOWNLOAD");
 		}
 
 	}
@@ -46,24 +44,19 @@ class CliParamsBuilder {
 		this.remoteHost = remoteHost;
 	}
 
-	public void setRemotePort(String remotePortString) {
+	public void setRemotePort(String remotePortString) throws CliParseException {
 
 		try {
 			this.remotePort = Integer.parseInt(remotePortString);
 
 			if (this.remotePort < 1 || this.remotePort > 65535) {
-				System.err.println("Indique un número de puerto en el rango 1-65535");
-				System.exit(1);	
+				throw new CliParseException("Indique un número de puerto en el rango 1-65535");
 			}
 
-
 		} catch (NumberFormatException e) {
-			System.err.println("Indique un número de puerto válido");
-			System.exit(1);
+			throw new CliParseException("Indique un número de puerto válido");
 		}
 
-
-		
 	}
 
 	public void setUsername(String username) {
@@ -82,22 +75,23 @@ class CliParamsBuilder {
 		this.destination = destination;
 	}
 
-	public CliParams build() throws IllegalStateException {
+	public CliParams build() throws CliParseException {
 
 		if (transferProtocol == null)
-			throw new IllegalStateException("No se ha especificado el protocolo de transferencia");
+			throw new CliParseException("No se ha especificado el protocolo de transferencia");
 		if (remoteHost == null)
-			throw new IllegalStateException("No se ha especificado el host remoto de la transferencia");
+			throw new CliParseException("No se ha especificado el host remoto de la transferencia");
 		if (sourceFile == null)
-			throw new IllegalStateException("No se ha especificado la ruta del fichero origen");
+			throw new CliParseException("No se ha especificado la ruta del fichero origen");
 		if (destination == null)
-			throw new IllegalStateException("No se ha especificado la ruta del fichero de destino");
-
+			throw new CliParseException("No se ha especificado la ruta del fichero de destino");
 
 		if (direction == null)
 			direction = TransferDirection.UPLOAD;
 
-		return new CliParams(transferProtocol, direction, remoteHost, remotePort, username, password, sourceFile, destination, null);
+		return new CliParams(transferProtocol, direction, remoteHost, remotePort, username, password, sourceFile,
+				destination, null);
 	}
+
 
 }

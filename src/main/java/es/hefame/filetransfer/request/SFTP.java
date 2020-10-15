@@ -42,28 +42,37 @@ public class SFTP extends TransferRequest {
 	}
 
 	@Override
-	public void upload() throws FileSystemException {
+	public void upload() throws TransferException {
 
-		FileSystemManager manager = VFS.getManager();
-		FileSystemOptions opts = this.getFileSystemOptions();
+		try {
+			FileSystemManager manager = VFS.getManager();
+			FileSystemOptions opts = this.getFileSystemOptions();
 
-		FileObject local = manager.resolveFile(params.getSourceFile());
-		FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
+			FileObject local = manager.resolveFile(params.getSourceFile());
+			FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
 
-		remote.copyFrom(local, Selectors.SELECT_SELF);
+			remote.copyFrom(local, Selectors.SELECT_SELF);
+
+		} catch (Exception e) {
+			throw new TransferException(e);
+		}
 
 	}
 
 	@Override
-	public void download() throws FileSystemException {
+	public void download() throws TransferException {
 
-		FileSystemManager manager = VFS.getManager();
-		FileSystemOptions opts = this.getFileSystemOptions();
+		try {
+			FileSystemManager manager = VFS.getManager();
+			FileSystemOptions opts = this.getFileSystemOptions();
 
-		FileObject local = manager.resolveFile(params.getDestination());
-		FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
+			FileObject local = manager.resolveFile(params.getDestination());
+			FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
 
-		local.copyFrom(remote, Selectors.SELECT_SELF);
+			local.copyFrom(remote, Selectors.SELECT_SELF);
+		} catch (Exception e) {
+			throw new TransferException(e);
+		}
 
 	}
 

@@ -24,12 +24,9 @@ import gnu.getopt.LongOpt;
  * ExtendedLongOpt.NO_ARGUMENT
  * 
  * <pre>
- * list l
- * ls l
+ * list -> l
+ * ls -> l
  * </pre>
- * 
- * 
- * 
  * 
  */
 public class ExtendedLongOpt {
@@ -154,17 +151,16 @@ public class ExtendedLongOpt {
 
 		for (ExtendedLongOpt extendedLongOpt : extendedLongOpts) {
 
-			sb.append("\n\n-" + extendedLongOpt.optChar);
+			sb.append("\n\t-" + extendedLongOpt.optChar + " <valor>");
 			for (String longOptName : extendedLongOpt.longOptions) {
-				sb.append("\n--" + longOptName);
+				sb.append(", --" + longOptName);
 			}
-			sb.append("\n\t" + extendedLongOpt.description);
+			sb.append("\n\t\t" + extendedLongOpt.description);
 
 		}
 
 		stream.println(sb.toString());
 		
-
 	}
 
 }

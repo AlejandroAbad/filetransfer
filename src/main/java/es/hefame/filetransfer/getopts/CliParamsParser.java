@@ -27,7 +27,7 @@ public class CliParamsParser {
 			new ExtendedLongOpt('d', LongOpt.REQUIRED_ARGUMENT,
 					"La ruta destino donde se almacenará el fichero transferido", "dest", "destination") };
 
-	public static CliParams parse(String... args) {
+	public static CliParams parse(String... args) throws CliParseException {
 
 		CliParamsBuilder paramsBuilder = new CliParamsBuilder();
 
@@ -41,7 +41,8 @@ public class CliParamsParser {
 		while ((c = g.getopt()) != -1) {
 			switch (c) {
 				case 'H':
-					showHelpAndAbortExecution();
+					ExtendedLongOpt.printHelp(PROGRAM_NAME, EXTENDED_LONG_OPTS, System.out);
+					System.exit(0);
 					break;
 				case 'c':
 					paramsBuilder.setTransferProtocol(g.getOptarg());
@@ -68,29 +69,15 @@ public class CliParamsParser {
 					paramsBuilder.setDestination(g.getOptarg());
 					break;
 				case ':':
-					showHelpAndAbortExecution();
-					break;
+					throw new CliParseException("La opción '" + (char) g.getOptopt() + "' requiere un argumento");
 				case '?':
-					System.err.println("Se ignora la opción '" + (char) g.getOptopt() + "' al no ser reconocida");
-					break;
+					throw new CliParseException("La opción '" + (char) g.getOptopt() + "' no se reconoce");
 				default:
 					break;
 			}
 		}
 
-		try {
-			return paramsBuilder.build();
-		} catch (IllegalStateException illegalStateException) {
-			System.err.println(illegalStateException.getMessage());
-			showHelpAndAbortExecution();
-			return null;
-		}
-
-	}
-
-	public static void showHelpAndAbortExecution() {
-		ExtendedLongOpt.printHelp(PROGRAM_NAME, EXTENDED_LONG_OPTS, System.err);
-		System.exit(-1);
+		return paramsBuilder.build();
 
 	}
 }

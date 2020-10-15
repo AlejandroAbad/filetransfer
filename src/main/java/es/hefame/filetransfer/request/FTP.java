@@ -1,7 +1,6 @@
 package es.hefame.filetransfer.request;
 
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.Selectors;
@@ -19,8 +18,9 @@ public class FTP extends TransferRequest {
 
 	private FileSystemOptions getFileSystemOptions() {
 		FileSystemOptions opts = new FileSystemOptions();
-		//FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(opts, FtpsMode.EXPLICIT);
-		
+		// FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(opts,
+		// FtpsMode.EXPLICIT);
+
 		FtpFileSystemConfigBuilder.getInstance().setPassiveMode(opts, true);
 		FtpFileSystemConfigBuilder.getInstance().setConnectTimeout(opts, 10000);
 		return opts;
@@ -41,29 +41,35 @@ public class FTP extends TransferRequest {
 	}
 
 	@Override
-	public void upload() throws FileSystemException {
+	public void upload() throws TransferException {
+		try {
+			FileSystemManager manager = VFS.getManager();
+			FileSystemOptions opts = this.getFileSystemOptions();
 
-		FileSystemManager manager = VFS.getManager();
-		FileSystemOptions opts = this.getFileSystemOptions();
+			FileObject local = manager.resolveFile(params.getSourceFile());
+			FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
 
-		FileObject local = manager.resolveFile(params.getSourceFile());
-		FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
-
-		remote.copyFrom(local, Selectors.SELECT_SELF);
+			remote.copyFrom(local, Selectors.SELECT_SELF);
+		} catch (Exception e) {
+			throw new TransferException(e);
+		}
 
 	}
 
 	@Override
-	public void download() throws FileSystemException {
+	public void download() throws TransferException {
+		try {
+			FileSystemManager manager = VFS.getManager();
+			FileSystemOptions opts = this.getFileSystemOptions();
 
-		FileSystemManager manager = VFS.getManager();
-		FileSystemOptions opts = this.getFileSystemOptions();
+			FileObject local = manager.resolveFile(params.getDestination());
+			FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
 
-		FileObject local = manager.resolveFile(params.getDestination());
-		FileObject remote = manager.resolveFile(this.getRemotePath(), opts);
+			local.copyFrom(remote, Selectors.SELECT_SELF);
+		} catch (Exception e) {
+			throw new TransferException(e);
+		}
 
-		local.copyFrom(remote, Selectors.SELECT_SELF);
-		
 	}
 
 }

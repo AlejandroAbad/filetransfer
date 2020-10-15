@@ -1,7 +1,5 @@
 package es.hefame.filetransfer.request;
 
-import org.apache.commons.vfs2.FileSystemException;
-
 import es.hefame.filetransfer.getopts.CliParams;
 
 public abstract class TransferRequest {
@@ -12,7 +10,7 @@ public abstract class TransferRequest {
 		this.params = params;
 	}
 
-	public final void transfer() throws FileSystemException {
+	public final void transfer() throws TransferException {
 
 		switch(params.getDirection()) {
 			case UPLOAD:
@@ -29,9 +27,9 @@ public abstract class TransferRequest {
 
 
 
-	public abstract void upload() throws FileSystemException;
+	public abstract void upload() throws TransferException;
 	
-	public abstract void download() throws FileSystemException;
+	public abstract void download() throws TransferException;
 
 
 }

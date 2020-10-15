@@ -1,5 +1,6 @@
 package es.hefame.filetransfer.getopts;
 
+import java.io.File;
 import java.util.Map;
 
 import es.hefame.filetransfer.TransferDirection;
@@ -64,10 +65,22 @@ public class CliParams {
 		return sourceFile;
 	}
 
+	public String getSourceFileName() {
+		File f = new File(this.sourceFile);
+		return f.getName();
+	}
+
+	public String getSourceFilePath() {
+		File f = new File(this.sourceFile);
+		return f.getPath();
+	}
+
 
 	public String getDestination() {
 		return destination;
 	}
+
+
 
 	public Map<String,Object> getExtraParameters() {
 		return this.extraParameters;
