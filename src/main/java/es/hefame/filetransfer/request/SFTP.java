@@ -22,7 +22,7 @@ public class SFTP extends TransferRequest {
 		FileSystemOptions opts = new FileSystemOptions();
 		SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(opts, "no");
 		SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, true);
-		SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 10000);
+		SftpFileSystemConfigBuilder.getInstance().setSessionTimeoutMillis(opts, 10000);
 
 		return opts;
 	}
