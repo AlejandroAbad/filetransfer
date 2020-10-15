@@ -7,7 +7,7 @@ import es.hefame.filetransfer.getopts.CliParams;
 import es.hefame.filetransfer.request.*;
 
 public enum TransferProtocol {
-	FTP(FTP.class), SFTP(SFTP.class), FTPS(FTPS.class), SCP(SCP.class);
+	FTP(FTP.class), SFTP(SFTP.class), FTPS(FTPS.class), SCP(SCP.class), SMB(CIFS.class);
 
 	private Class<? extends TransferRequest> protocolClass;
 
