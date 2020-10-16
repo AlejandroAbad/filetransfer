@@ -29,15 +29,15 @@ public final class App {
             System.exit(0);
         } catch (TransferException e) {
             System.out.println("1: " + e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(System.err);
             System.exit(1);
         } catch (CliParseException e) {
             System.out.println("2: " + e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(System.err);
             System.exit(2);
         } catch (InstantiationException e) {
             System.out.println("3: " + e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(System.err);
             System.exit(3);
         }
 
