@@ -16,6 +16,7 @@ import com.hierynomus.msfscc.fileinformation.FileStandardInformation;
 import com.hierynomus.mssmb2.SMB2CreateDisposition;
 import com.hierynomus.mssmb2.SMB2CreateOptions;
 import com.hierynomus.mssmb2.SMB2ShareAccess;
+import com.hierynomus.mssmb2.SMBApiException;
 import com.hierynomus.smbj.SMBClient;
 import com.hierynomus.smbj.SmbConfig;
 import com.hierynomus.smbj.auth.AuthenticationContext;
@@ -90,6 +91,11 @@ public class SMB extends TransferRequest {
 	private File openRemoteFileForWrite(DiskShare share) {
 		String remoteFilePath = getRemoteFileName(params.getDestination());
 
+		if (remoteFilePath.endsWith("/")) {
+			remoteFilePath += params.getSourceFileName(); 
+		}
+
+
 		// ACCESS MASK
 		HashSet<AccessMask> accessMask = new HashSet<>();
 		accessMask.add(AccessMask.GENERIC_ALL);
@@ -102,7 +108,18 @@ public class SMB extends TransferRequest {
 		Set<SMB2CreateOptions> createOptions = new HashSet<>();
 		createOptions.add(SMB2CreateOptions.FILE_RANDOM_ACCESS);
 
-		return share.openFile(remoteFilePath, accessMask, fileAttributes, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OVERWRITE_IF, createOptions);
+		
+		try {
+			return share.openFile(remoteFilePath, accessMask, fileAttributes, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OVERWRITE_IF, createOptions);
+		} catch (SMBApiException e) {			
+			// Si la excepción es STATUS_FILE_IS_A_DIRECTORY (0xC00000BA = 3221225658L)
+			// Es porque el destino es un directiorio y por tanto indicamos el nombre del fichero origen
+			if (e.getStatusCode() == 0xC00000BAL) {
+				remoteFilePath += "/" + params.getSourceFileName();
+				return share.openFile(remoteFilePath, accessMask, fileAttributes, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OVERWRITE_IF, createOptions);
+			}
+			throw e;
+		}
 	}
 
 	private File openRemoteFileForRead(DiskShare share) {
@@ -191,8 +208,17 @@ public class SMB extends TransferRequest {
 					String remoteShareName = getShareName(params.getSourceFile());
 					try (DiskShare share = (DiskShare) session.connectShare(remoteShareName)) {
 
+						String localFileName = params.getDestination();
+						if (localFileName.endsWith("/")) {
+							localFileName += params.getSourceFileName();
+						}
+
 						File remoteFile = openRemoteFileForRead(share);
-						java.io.File localFile = new java.io.File(params.getDestination());
+						java.io.File localFile = new java.io.File(localFileName);
+
+						if (localFile.isDirectory()) {
+							localFile = new java.io.File(localFileName + "/" + params.getSourceFileName());
+						}
 
 						copyFiles(connection, getSmbFileLength(remoteFile), remoteFile.getInputStream(), new FileOutputStream(localFile));
 
