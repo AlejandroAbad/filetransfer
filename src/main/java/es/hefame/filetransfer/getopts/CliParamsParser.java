@@ -1,5 +1,12 @@
 package es.hefame.filetransfer.getopts;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hierynomus.utils.Strings;
+
+import es.hefame.filetransfer.TransferDirection;
+import es.hefame.filetransfer.TransferProtocol;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
@@ -11,16 +18,39 @@ public class CliParamsParser {
 
 	private static final String PROGRAM_NAME = "filetransfer";
 
+	private static final String AVAILABLE_PROTOCOL_NAMES;
+	private static final String AVAILABLE_DIRECTION_NAMES;
+	static {
+		TransferProtocol[] allTransferProtocols = TransferProtocol.values();
+		List<String> availableProtocolNames = new ArrayList<>(allTransferProtocols.length);
+
+		for (TransferProtocol td : allTransferProtocols) {
+			availableProtocolNames.add(td.name());
+		}
+
+		AVAILABLE_PROTOCOL_NAMES = Strings.join(availableProtocolNames, '|');
+
+		TransferDirection[] allTransferDirections = TransferDirection.values();
+		List<String> availableDirectionNames = new ArrayList<>(allTransferDirections.length);
+
+		for (TransferDirection td : allTransferDirections) {
+			availableDirectionNames.add(td.name());
+		}
+
+		AVAILABLE_DIRECTION_NAMES = Strings.join(availableDirectionNames, '|');
+
+	}
+
 	private static final ExtendedLongOpt[] EXTENDED_LONG_OPTS = {
-			new ExtendedLongOpt('H', LongOpt.NO_ARGUMENT, "Muestra esta ayuda", "help"),
-			new ExtendedLongOpt('c', LongOpt.REQUIRED_ARGUMENT, "El comando/protocolo con el que realizar la transferencia (sftp, ftps, etc ...)", "command", "protocol"),
-			new ExtendedLongOpt('D', LongOpt.REQUIRED_ARGUMENT, "El sentido de la transferencia (upload | download)", "dir", "direction"),
-			new ExtendedLongOpt('h', LongOpt.REQUIRED_ARGUMENT, "El host remoto al que conectar", "host"),
+			new ExtendedLongOpt('h', LongOpt.NO_ARGUMENT, "Muestra esta ayuda", "help"),
+			new ExtendedLongOpt('m', LongOpt.REQUIRED_ARGUMENT, "El método con el que realizar la transferencia [" + AVAILABLE_PROTOCOL_NAMES + "]", "protocol"),
+			new ExtendedLongOpt('d', LongOpt.REQUIRED_ARGUMENT, "El sentido de la transferencia [" + AVAILABLE_DIRECTION_NAMES + "]", "direction"),
+			new ExtendedLongOpt('H', LongOpt.REQUIRED_ARGUMENT, "El host remoto al que conectar", "host"),
 			new ExtendedLongOpt('P', LongOpt.REQUIRED_ARGUMENT, "El puerto remoto al que conectar", "port"),
 			new ExtendedLongOpt('u', LongOpt.REQUIRED_ARGUMENT, "El usuario con el que hacer login en el host remoto", "user", "username"),
 			new ExtendedLongOpt('p', LongOpt.REQUIRED_ARGUMENT, "La contraseña del usuario", "pass", "password"),
 			new ExtendedLongOpt('f', LongOpt.REQUIRED_ARGUMENT, "La ruta al fichero origen", "from"),
-			new ExtendedLongOpt('d', LongOpt.REQUIRED_ARGUMENT, "La ruta destino donde se almacenará el fichero transferido", "dest", "destination") };
+			new ExtendedLongOpt('t', LongOpt.REQUIRED_ARGUMENT, "La ruta destino donde se almacenará el fichero transferido", "to") };
 
 	public static CliParams parse(String... args) throws CliParseException {
 
@@ -35,17 +65,17 @@ public class CliParamsParser {
 		// String arg;
 		while ((c = g.getopt()) != -1) {
 			switch (c) {
-			case 'H':
+			case 'h':
 				ExtendedLongOpt.printHelp(PROGRAM_NAME, EXTENDED_LONG_OPTS, System.out);
 				System.exit(0);
 				break;
-			case 'c':
+			case 'm':
 				paramsBuilder.setTransferProtocol(g.getOptarg());
 				break;
-			case 'D':
+			case 'd':
 				paramsBuilder.setTransferDirection(g.getOptarg());
 				break;
-			case 'h':
+			case 'H':
 				paramsBuilder.setRemoteHost(g.getOptarg());
 				break;
 			case 'P':
@@ -60,7 +90,7 @@ public class CliParamsParser {
 			case 'f':
 				paramsBuilder.setSourceFile(g.getOptarg());
 				break;
-			case 'd':
+			case 't':
 				paramsBuilder.setDestination(g.getOptarg());
 				break;
 			case ':':

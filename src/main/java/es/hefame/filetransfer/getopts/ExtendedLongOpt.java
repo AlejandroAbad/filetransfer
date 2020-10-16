@@ -147,15 +147,23 @@ public class ExtendedLongOpt {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("Uso:\n" + programName + " <opciones>\n\nOpciones disponibles:");
+		sb.append("Uso: " + programName + " <opciones>\n\nOpciones disponibles:\n");
 
 		for (ExtendedLongOpt extendedLongOpt : extendedLongOpts) {
 
-			sb.append("\n\t-" + extendedLongOpt.optChar + " <valor>");
+
+
+			sb.append("\n-" + extendedLongOpt.optChar);
 			for (String longOptName : extendedLongOpt.longOptions) {
 				sb.append(", --" + longOptName);
 			}
-			sb.append("\n\t\t" + extendedLongOpt.description);
+			if (extendedLongOpt.argumentFlag == ExtendedLongOpt.REQUIRED_ARGUMENT) {
+				sb.append(" <valor>");	
+			} else if (extendedLongOpt.argumentFlag == ExtendedLongOpt.OPTIONAL_ARGUMENT) { 
+				sb.append(" [ <valor> ]");
+			}
+
+			sb.append("\n\t" + extendedLongOpt.description);
 
 		}
 
