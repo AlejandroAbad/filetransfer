@@ -27,8 +27,13 @@ public class FTPS extends TransferRequest {
 
 	private String getRemotePath() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.params.getTransferProtocol().name().toLowerCase()).append("://").append(params.getUsername())
-				.append(":").append(params.getPassword()).append("@").append(params.getRemoteHost());
+		sb.append(this.params.getTransferProtocol().name().toLowerCase())
+		.append("://")
+		.append(params.getUsername())
+		.append(":")
+		.append(params.getPassword())
+		.append("@")
+		.append(params.getRemoteHost());
 
 		if (params.getDirection() == TransferDirection.UPLOAD) {
 			sb.append(params.getDestination());

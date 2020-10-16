@@ -67,7 +67,10 @@ public class SMB extends TransferRequest {
 	}
 
 	private SmbConfig getConnectionConfig() {
-		return SmbConfig.builder().withTimeout(60, TimeUnit.SECONDS).withSoTimeout(90, TimeUnit.SECONDS).build();
+		return SmbConfig.builder()
+				.withTimeout(60, TimeUnit.SECONDS)
+				.withSoTimeout(90, TimeUnit.SECONDS)
+				.build();
 	}
 
 	private Session getSession(Connection connection) {
@@ -79,8 +82,7 @@ public class SMB extends TransferRequest {
 			domain = userParts[0];
 			username = userParts[1];
 		}
-		AuthenticationContext authContext = new AuthenticationContext(username, params.getPassword().toCharArray(),
-				domain);
+		AuthenticationContext authContext = new AuthenticationContext(username, params.getPassword().toCharArray(), domain);
 
 		return connection.authenticate(authContext);
 	}
@@ -100,8 +102,7 @@ public class SMB extends TransferRequest {
 		Set<SMB2CreateOptions> createOptions = new HashSet<>();
 		createOptions.add(SMB2CreateOptions.FILE_RANDOM_ACCESS);
 
-		return share.openFile(remoteFilePath, accessMask, fileAttributes, SMB2ShareAccess.ALL,
-				SMB2CreateDisposition.FILE_OVERWRITE_IF, createOptions);
+		return share.openFile(remoteFilePath, accessMask, fileAttributes, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OVERWRITE_IF, createOptions);
 	}
 
 	private File openRemoteFileForRead(DiskShare share) {
@@ -119,12 +120,10 @@ public class SMB extends TransferRequest {
 		Set<SMB2CreateOptions> createOptions = new HashSet<>();
 		createOptions.add(SMB2CreateOptions.FILE_RANDOM_ACCESS);
 
-		return share.openFile(remoteFilePath, accessMask, null, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OPEN,
-				null);
+		return share.openFile(remoteFilePath, accessMask, null, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OPEN, null);
 	}
 
-	private void copyFiles(Connection connection, long fileLength, InputStream in, OutputStream out)
-			throws IOException {
+	private void copyFiles(Connection connection, long fileLength, InputStream in, OutputStream out) throws IOException {
 		int maxReadSize = connection.getNegotiatedProtocol().getMaxReadSize();
 		byte[] buffer = new byte[maxReadSize];
 
@@ -162,20 +161,16 @@ public class SMB extends TransferRequest {
 		try {
 			try (SMBClient client = new SMBClient(getConnectionConfig())) {
 				try (Connection connection = client.connect(params.getRemoteHost())) {
-					
+
 					Session session = getSession(connection);
 
-					
 					String remoteShareName = getShareName(params.getDestination());
 					try (DiskShare share = (DiskShare) session.connectShare(remoteShareName)) {
-
-						
 
 						File remoteFile = openRemoteFileForWrite(share);
 						java.io.File localFile = new java.io.File(params.getSourceFile());
 
-						copyFiles(connection, localFile.length(), new FileInputStream(localFile),
-								remoteFile.getOutputStream());
+						copyFiles(connection, localFile.length(), new FileInputStream(localFile), remoteFile.getOutputStream());
 
 					}
 				}
@@ -199,8 +194,7 @@ public class SMB extends TransferRequest {
 						File remoteFile = openRemoteFileForRead(share);
 						java.io.File localFile = new java.io.File(params.getDestination());
 
-						copyFiles(connection, getSmbFileLength(remoteFile), 
-								remoteFile.getInputStream(), new FileOutputStream(localFile));
+						copyFiles(connection, getSmbFileLength(remoteFile), remoteFile.getInputStream(), new FileOutputStream(localFile));
 
 					}
 				}

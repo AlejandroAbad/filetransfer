@@ -1,6 +1,5 @@
 package es.hefame.filetransfer;
 
-
 import java.lang.reflect.InvocationTargetException;
 
 import es.hefame.filetransfer.getopts.CliParams;
@@ -19,8 +18,7 @@ public enum TransferProtocol {
 
 		try {
 			return this.protocolClass.getConstructor(CliParams.class).newInstance(parameters);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new InstantiationException("El tipo de transferencia " + this.name() + " no tiene clase asociada");
 		}
 
@@ -28,13 +26,13 @@ public enum TransferProtocol {
 
 	public static TransferProtocol fromName(String name) {
 
-		for (TransferProtocol tp : TransferProtocol.values() ) {
+		for (TransferProtocol tp : TransferProtocol.values()) {
 			if (tp.name().equalsIgnoreCase(name)) {
 				return tp;
 			}
 		}
 
 		return null;
-	} 
-	
+	}
+
 }
