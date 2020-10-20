@@ -102,7 +102,7 @@ public class CliParamsParser {
 			}
 		}
 
-		return paramsBuilder.build();
+		return paramsBuilder.build(args);
 
 	}
 }

@@ -1,5 +1,6 @@
 package es.hefame.filetransfer.request;
 
+import org.apache.commons.logging.impl.NoOpLog;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -49,6 +50,8 @@ public class FTP extends TransferRequest {
 	public void upload() throws TransferException {
 		try {
 			FileSystemManager manager = VFS.getManager();
+			manager.setLogger(new NoOpLog());
+
 			FileSystemOptions opts = this.getFileSystemOptions();
 
 			FileObject local = manager.resolveFile(params.getSourceFile());
@@ -65,6 +68,8 @@ public class FTP extends TransferRequest {
 	public void download() throws TransferException {
 		try {
 			FileSystemManager manager = VFS.getManager();
+			manager.setLogger(new NoOpLog());
+			
 			FileSystemOptions opts = this.getFileSystemOptions();
 
 			FileObject local = manager.resolveFile(params.getDestination());

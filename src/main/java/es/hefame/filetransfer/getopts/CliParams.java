@@ -7,8 +7,8 @@ import es.hefame.filetransfer.TransferDirection;
 import es.hefame.filetransfer.TransferProtocol;
 
 public class CliParams {
-	
 
+	private String[] cliArgs;
 	private TransferProtocol transferProtocol;
 	private TransferDirection direction;
 	private String remoteHost;
@@ -17,10 +17,11 @@ public class CliParams {
 	private String password;
 	private String sourceFile;
 	private String destination;
-	private Map<String,Object> extraParameters;
+	private Map<String, Object> extraParameters;
 
-	public CliParams(TransferProtocol transferProtocol, TransferDirection direction, String remoteHost, int remotePort,
-			String username, String password, String sourceFile, String destination, Map<String,Object> extraParameters) {
+	public CliParams(String[] cliArgs, TransferProtocol transferProtocol, TransferDirection direction, String remoteHost, int remotePort,
+			String username, String password, String sourceFile, String destination, Map<String, Object> extraParameters) {
+		this.cliArgs = cliArgs;
 		this.transferProtocol = transferProtocol;
 		this.direction = direction;
 		this.remoteHost = remoteHost;
@@ -28,19 +29,21 @@ public class CliParams {
 		this.username = username;
 		this.password = password;
 		this.sourceFile = sourceFile;
-		this.destination = destination;	
+		this.destination = destination;
 		this.extraParameters = extraParameters;
+	}
+
+	public String[] getCliArgs() {
+		return this.cliArgs;
 	}
 
 	public TransferProtocol getTransferProtocol() {
 		return transferProtocol;
 	}
 
-
 	public TransferDirection getDirection() {
 		return direction;
 	}
-
 
 	public String getRemoteHost() {
 		return remoteHost;
@@ -50,16 +53,13 @@ public class CliParams {
 		return remotePort;
 	}
 
-
 	public String getUsername() {
 		return username;
 	}
 
-
 	public String getPassword() {
 		return password;
 	}
-
 
 	public String getSourceFile() {
 		return sourceFile;
@@ -75,14 +75,11 @@ public class CliParams {
 		return f.getPath();
 	}
 
-
 	public String getDestination() {
 		return destination;
 	}
 
-
-
-	public Map<String,Object> getExtraParameters() {
+	public Map<String, Object> getExtraParameters() {
 		return this.extraParameters;
 	}
 
@@ -92,10 +89,5 @@ public class CliParams {
 				+ ", remoteHost=" + remoteHost + ", remotePort=" + remotePort + ", sourceFile=" + sourceFile
 				+ ", transferProtocol=" + transferProtocol + ", username=" + username + "]";
 	}
-
-
-
-
-
 
 }

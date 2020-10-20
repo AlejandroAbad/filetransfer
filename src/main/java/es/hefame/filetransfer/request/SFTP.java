@@ -1,5 +1,6 @@
 package es.hefame.filetransfer.request;
 
+import org.apache.commons.logging.impl.NoOpLog;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -51,6 +52,8 @@ public class SFTP extends TransferRequest {
 
 		try {
 			FileSystemManager manager = VFS.getManager();
+			manager.setLogger(new NoOpLog());
+
 			FileSystemOptions opts = this.getFileSystemOptions();
 
 			FileObject local = manager.resolveFile(params.getSourceFile());
@@ -69,6 +72,8 @@ public class SFTP extends TransferRequest {
 
 		try {
 			FileSystemManager manager = VFS.getManager();
+			manager.setLogger(new NoOpLog());
+			
 			FileSystemOptions opts = this.getFileSystemOptions();
 
 			FileObject local = manager.resolveFile(params.getDestination());

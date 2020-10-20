@@ -21,23 +21,25 @@ public final class App {
      */
     public static void main(String... args) {
 
+        CliParams params = null;
         try {
-            CliParams params = CliParamsParser.parse(args);
+            params = CliParamsParser.parse(args);
             TransferRequest request = params.getTransferProtocol().instanciate(params);
             request.transfer();
             System.out.println("0: File copied successfully");
+            TransferLog.logTransfer(request, 0);
             System.exit(0);
         } catch (TransferException e) {
             System.out.println("1: " + e.getMessage());
-            e.printStackTrace(System.err);
+            TransferLog.logTransfer(args, params, 1, e);
             System.exit(1);
         } catch (CliParseException e) {
             System.out.println("2: " + e.getMessage());
-            e.printStackTrace(System.err);
+            TransferLog.logTransfer(args, params, 2, e);
             System.exit(2);
         } catch (InstantiationException e) {
             System.out.println("3: " + e.getMessage());
-            e.printStackTrace(System.err);
+            TransferLog.logTransfer(args, params, 3, e);
             System.exit(3);
         }
 

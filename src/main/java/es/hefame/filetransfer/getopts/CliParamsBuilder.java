@@ -75,7 +75,7 @@ class CliParamsBuilder {
 		this.destination = destination;
 	}
 
-	public CliParams build() throws CliParseException {
+	public CliParams build(String[] cliArgs) throws CliParseException {
 
 		if (transferProtocol == null)
 			throw new CliParseException("No se ha especificado el protocolo de transferencia");
@@ -89,7 +89,8 @@ class CliParamsBuilder {
 		if (direction == null)
 			direction = TransferDirection.UPLOAD;
 
-		return new CliParams(transferProtocol, direction, remoteHost, remotePort, username, password, sourceFile,
+		return new CliParams(
+				cliArgs, transferProtocol, direction, remoteHost, remotePort, username, password, sourceFile,
 				destination, null);
 	}
 
