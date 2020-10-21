@@ -26,4 +26,7 @@ buildNumber.properties
 .factorypath
 .project
 .vscode/
+
+# Ficheros de log y configuracion
 filetransfer.log
+filetransfer.sh
