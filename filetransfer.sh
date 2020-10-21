@@ -52,6 +52,11 @@ then
     if [ "$2" == "last" ]
     then
         echo "Moviendinos hasta la ultima version disponible de la aplicacion ..."
+        git config --global user.email "dummy@example.com"
+        git config --global user.name "Dummy"
+        git add -A .
+        git stash
+        git stash drop
         git pull origin main
     else
         echo "Moviendonos a la version '$2' de la aplicación ..."
