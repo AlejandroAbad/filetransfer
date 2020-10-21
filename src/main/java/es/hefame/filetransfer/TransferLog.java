@@ -78,9 +78,14 @@ public class TransferLog {
 		private long bytesTransferidos;
 		private long milisegundosTranscurridos;
 
+		private String osUser;
+		private String workingDir;
+
 		public LogEntry() {
 			this.timestamp = System.currentTimeMillis();
 			this.hostLocal = Hostname.getHostname();
+			this.osUser = System.getProperty("user.name");
+			this.workingDir = System.getProperty("user.dir");
 		}
 
 		public void setArgumentos(String[] args) {
@@ -146,6 +151,9 @@ public class TransferLog {
 			builder.append(timestamp).append('|');
 			builder.append(protocolo).append('|');
 			builder.append(sentidoTransmision).append('|');
+			builder.append(hostLocal).append('|');
+			builder.append(osUser).append('|');
+			builder.append(workingDir).append('|');
 			builder.append(hostDestino).append('|');
 			builder.append(puertoDestino).append('|');
 			builder.append(usuario).append('|');
@@ -167,6 +175,8 @@ public class TransferLog {
 					.append("protocolo", this.protocolo)
 					.append("sentidoTransmision", this.sentidoTransmision)
 					.append("hostLocal", this.hostLocal)
+					.append("osUser", this.osUser)
+					.append("workingDir", this.workingDir)
 					.append("hostDestino", this.hostDestino)
 					.append("puertoDestino", this.puertoDestino)
 					.append("usuario", this.usuario)
