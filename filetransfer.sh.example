@@ -95,6 +95,7 @@ then
 	echo "Generando enlaces simbolicos /usr/bin/filetransfer y /usr/bin/ft"
     ln -fs $INSTALL_DIR/filetransfer.sh /usr/bin/filetransfer
     ln -fs /usr/bin/filetransfer /usr/bin/ft
+    exit 0
 fi
 
 
