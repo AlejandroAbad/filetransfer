@@ -1,6 +1,7 @@
 package es.hefame.filetransfer;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PrintStream;
 
@@ -51,7 +52,9 @@ public class TransferLog {
 
 	public static void logException(Exception exception) {
 		try {
-			exception.printStackTrace(new PrintStream(logFile));
+			try (FileOutputStream fos = new FileOutputStream(logFile)) {
+				exception.printStackTrace(new PrintStream(fos));
+			}
 		} catch (Exception e) {
 
 		}
@@ -169,23 +172,14 @@ public class TransferLog {
 		}
 
 		public Document toMDbObject() {
-			return new Document()
-					.append("timestamp", this.timestamp)
-					.append("argumentos", this.argumentos)
-					.append("protocolo", this.protocolo)
-					.append("sentidoTransmision", this.sentidoTransmision)
-					.append("hostLocal", this.hostLocal)
-					.append("osUser", this.osUser)
-					.append("workingDir", this.workingDir)
-					.append("hostDestino", this.hostDestino)
-					.append("puertoDestino", this.puertoDestino)
-					.append("usuario", this.usuario)
-					.append("ficheroOrigen", this.ficheroOrigen)
-					.append("ficheroDestino", this.ficheroDestino)
-					.append("codigoRetorno", this.codigoRetorno)
-					.append("claseError", this.claseError)
-					.append("mensajeError", this.mensajeError)
-					.append("bytesTransferidos", this.bytesTransferidos)
+			return new Document().append("timestamp", this.timestamp).append("argumentos", this.argumentos)
+					.append("protocolo", this.protocolo).append("sentidoTransmision", this.sentidoTransmision)
+					.append("hostLocal", this.hostLocal).append("osUser", this.osUser)
+					.append("workingDir", this.workingDir).append("hostDestino", this.hostDestino)
+					.append("puertoDestino", this.puertoDestino).append("usuario", this.usuario)
+					.append("ficheroOrigen", this.ficheroOrigen).append("ficheroDestino", this.ficheroDestino)
+					.append("codigoRetorno", this.codigoRetorno).append("claseError", this.claseError)
+					.append("mensajeError", this.mensajeError).append("bytesTransferidos", this.bytesTransferidos)
 					.append("milisegundosTranscurridos", this.milisegundosTranscurridos);
 		}
 	}
