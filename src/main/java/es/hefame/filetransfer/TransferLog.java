@@ -1,5 +1,9 @@
 package es.hefame.filetransfer;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintStream;
+
 import com.kstruct.gethostname4j.Hostname;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -13,6 +17,46 @@ import es.hefame.filetransfer.request.TransferRequest;
 
 public class TransferLog {
 
+	private static File logFile = new File(System.getProperty("log"));;
+	private static final String MONGOURI = System.getProperty("mongodb");
+	private static final boolean DEBUG = "true".equalsIgnoreCase(System.getProperty("debug"));
+
+	private static void logToFile(String line) {
+		if (logFile != null) {
+			try {
+				try (FileWriter logWriter = new FileWriter(logFile, true)) {
+					logWriter.write(line);
+					logWriter.write('\n');
+					logWriter.flush();
+				}
+			} catch (Exception e) {
+
+			}
+		}
+	}
+
+	public static void logToMongo(LogEntry logEntry) {
+		try {
+
+			try (MongoClient mongoClient = new MongoClient(new MongoClientURI(MONGOURI))) {
+				MongoDatabase database = mongoClient.getDatabase("fileTransfer");
+				MongoCollection<Document> collection = database.getCollection("transferencias");
+				collection.insertOne(logEntry.toMDbObject());
+			}
+		} catch (Exception e) {
+			logException(e);
+		}
+
+	}
+
+	public static void logException(Exception exception) {
+		try {
+			exception.printStackTrace(new PrintStream(logFile));
+		} catch (Exception e) {
+
+		}
+	}
+
 	private TransferLog() {
 	}
 
@@ -20,23 +64,17 @@ public class TransferLog {
 
 		private String argumentos;
 		private long timestamp;
-
 		private int codigoRetorno;
 		private String mensajeError;
 		private String claseError;
-
 		private String protocolo;
 		private String sentidoTransmision;
-
 		private String hostLocal;
 		private String hostDestino;
 		private int puertoDestino;
-
 		private String usuario;
-
 		private String ficheroOrigen;
 		private String ficheroDestino;
-
 		private long bytesTransferidos;
 		private long milisegundosTranscurridos;
 
@@ -47,13 +85,11 @@ public class TransferLog {
 
 		public void setArgumentos(String[] args) {
 			StringBuilder sb = new StringBuilder();
-
 			for (int i = 0; i < args.length; i++) {
 				if (i > 0)
 					sb.append(' ');
 				sb.append(args[i]);
 			}
-
 			this.argumentos = sb.toString();
 		}
 
@@ -107,37 +143,20 @@ public class TransferLog {
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
-			builder.append("LogEntry [argumentos=");
+			builder.append(timestamp).append('|');
+			builder.append(protocolo).append('|');
+			builder.append(sentidoTransmision).append('|');
+			builder.append(hostDestino).append('|');
+			builder.append(puertoDestino).append('|');
+			builder.append(usuario).append('|');
+			builder.append(ficheroOrigen).append('|');
+			builder.append(ficheroDestino).append('|');
+			builder.append(bytesTransferidos).append('|');
+			builder.append(milisegundosTranscurridos).append('|');
+			builder.append(codigoRetorno).append('|');
+			builder.append(claseError).append('|');
+			builder.append(mensajeError).append('|');
 			builder.append(argumentos);
-			builder.append(", bytesTransferidos=");
-			builder.append(bytesTransferidos);
-			builder.append(", claseError=");
-			builder.append(claseError);
-			builder.append(", codigoRetorno=");
-			builder.append(codigoRetorno);
-			builder.append(", ficheroDestino=");
-			builder.append(ficheroDestino);
-			builder.append(", ficheroOrigen=");
-			builder.append(ficheroOrigen);
-			builder.append(", hostDestino=");
-			builder.append(hostDestino);
-			builder.append(", hostLocal=");
-			builder.append(hostLocal);
-			builder.append(", mensajeError=");
-			builder.append(mensajeError);
-			builder.append(", milisegundosTranscurridos=");
-			builder.append(milisegundosTranscurridos);
-			builder.append(", protocolo=");
-			builder.append(protocolo);
-			builder.append(", puertoDestino=");
-			builder.append(puertoDestino);
-			builder.append(", sentidoTransmision=");
-			builder.append(sentidoTransmision);
-			builder.append(", timestamp=");
-			builder.append(timestamp);
-			builder.append(", usuario=");
-			builder.append(usuario);
-			builder.append("]");
 			return builder.toString();
 		}
 
@@ -164,30 +183,22 @@ public class TransferLog {
 	public static void logTransfer(TransferRequest transferRequest, int result) {
 
 		LogEntry logEntry = new TransferLog.LogEntry();
-
 		CliParams params = transferRequest.getCliParams();
-
 		logEntry.setArgumentos(params.getCliArgs());
-
 		logEntry.setProtocolo(params.getTransferProtocol().name());
 		logEntry.setSentidoTransmision(params.getDirection().name());
-
 		logEntry.setHostDestino(params.getRemoteHost());
 		logEntry.setPuertoDestino(params.getRemotePort());
-
 		logEntry.setUsuario(params.getUsername());
-
 		logEntry.setFicheroDestino(params.getSourceFile());
 		logEntry.setFicheroOrigen(params.getDestination());
-
 		logEntry.setBytesTransferidos(transferRequest.getTransferredBytes());
 		logEntry.setMilisegundosTranscurridos(transferRequest.getTimeElapsed());
-
 		logEntry.setCodigoRetorno(result);
 		logEntry.setError(null);
 
-		// System.out.println(logEntry);
-		TransferLog.mdb(logEntry);
+		TransferLog.logToFile(logEntry.toString());
+		TransferLog.logToMongo(logEntry);
 
 	}
 
@@ -197,15 +208,11 @@ public class TransferLog {
 
 		if (params != null) {
 			logEntry.setArgumentos(params.getCliArgs());
-
 			logEntry.setProtocolo(params.getTransferProtocol().name());
 			logEntry.setSentidoTransmision(params.getDirection().name());
-
 			logEntry.setHostDestino(params.getRemoteHost());
 			logEntry.setPuertoDestino(params.getRemotePort());
-
 			logEntry.setUsuario(params.getUsername());
-
 			logEntry.setFicheroDestino(params.getSourceFile());
 			logEntry.setFicheroOrigen(params.getDestination());
 		} else {
@@ -215,27 +222,11 @@ public class TransferLog {
 		logEntry.setCodigoRetorno(result);
 		logEntry.setError(error);
 
-		// System.out.println(logEntry);
-		TransferLog.mdb(logEntry);
+		TransferLog.logToFile(logEntry.toString());
+		TransferLog.logToMongo(logEntry);
+		if (DEBUG)
+			logException(error);
 
 	}
 
-	public static void mdb(LogEntry logEntry) {
-
-		// MongoCredential credential =
-		// MongoCredential.createScramSha256Credential("fileTransfer", "fileTransfer",
-		// "ElFuturoEsFTP".toCharArray());
-		// MongoClientOptions options = MongoClientOptions.builder().build();
-		try {
-			String mdbstring = System.getProperty("mongodb");
-			try (MongoClient mongoClient = new MongoClient(new MongoClientURI(mdbstring))) {
-				MongoDatabase database = mongoClient.getDatabase("fileTransfer");
-				MongoCollection<Document> collection = database.getCollection("transferencias");
-				collection.insertOne(logEntry.toMDbObject());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
 }

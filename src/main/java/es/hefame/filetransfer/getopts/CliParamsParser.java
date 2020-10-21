@@ -86,6 +86,8 @@ public class CliParamsParser {
 				break;
 			case 'p':
 				paramsBuilder.setPassword(g.getOptarg());
+				// Borramos la password del array de argumentos para no mostrarla en el log
+				args[g.getOptind() - 1 ] = "****";
 				break;
 			case 'f':
 				paramsBuilder.setSourceFile(g.getOptarg());
@@ -101,6 +103,8 @@ public class CliParamsParser {
 				break;
 			}
 		}
+
+
 
 		return paramsBuilder.build(args);
 
