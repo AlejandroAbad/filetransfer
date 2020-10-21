@@ -20,7 +20,7 @@ chmod a+x filetransfer.sh
 ```
 Una vez instalada, ya tendremos disponible el comando `filetransfer` en el PATH (y el comando `ft` que es un alias !)
 
-## Actualuzación
+## Actualización
 Ejecuta `filetransfer update` y la propia aplicación te mostrará el camino :)
 
 ## Configuración
