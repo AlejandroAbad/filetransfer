@@ -9,7 +9,7 @@ import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 
 import es.hefame.filetransfer.getopts.CliParams;
 
-public class SFTP extends VSFTransfer {
+public class SFTP extends VFSTransfer {
 
 	public SFTP(CliParams params) {
 		super(params);

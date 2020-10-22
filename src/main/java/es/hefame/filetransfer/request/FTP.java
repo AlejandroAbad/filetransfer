@@ -5,7 +5,7 @@ import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
 
 import es.hefame.filetransfer.getopts.CliParams;
 
-public class FTP extends VSFTransfer {
+public class FTP extends VFSTransfer {
 
 	public FTP(CliParams params) {
 		super(params);

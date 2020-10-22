@@ -6,7 +6,7 @@ import org.apache.commons.vfs2.provider.ftps.FtpsMode;
 
 import es.hefame.filetransfer.getopts.CliParams;
 
-public class FTPS extends VSFTransfer {
+public class FTPS extends VFSTransfer {
 
 	public FTPS(CliParams params) {
 		super(params);

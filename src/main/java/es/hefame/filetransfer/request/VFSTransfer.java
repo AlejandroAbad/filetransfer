@@ -11,9 +11,9 @@ import org.apache.commons.vfs2.VFS;
 import es.hefame.filetransfer.TransferDirection;
 import es.hefame.filetransfer.getopts.CliParams;
 
-public abstract class VSFTransfer extends TransferRequest {
+public abstract class VFSTransfer extends TransferRequest {
 
-	public VSFTransfer(CliParams params) {
+	protected VFSTransfer(CliParams params) {
 		super(params);
 	}
 
