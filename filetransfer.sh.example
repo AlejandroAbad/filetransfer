@@ -41,6 +41,11 @@ VMARGS="$VMARGS -Ddebug=${DEBUG}"
 VMARGS="$VMARGS -Dlog=${LOGFILE}"
 
 
+# Activación y forzado de TLSv1.2 en la JVM IBM
+# https://www.ibm.com/support/pages/how-configure-force-controller-use-tls-12
+VMARGS="$VMARGS -Dcom.ibm.jsse2.overrideDefaultTLS=true -Dcom.ibm.jsse2.overrideDefaultProtocol=TLSv12"
+
+
 JAR="${INSTALL_DIR}/target/filetransfer.jar"
 
 
