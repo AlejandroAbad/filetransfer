@@ -202,8 +202,8 @@ public class TransferLog {
 		logEntry.setHostDestino(params.getRemoteHost());
 		logEntry.setPuertoDestino(params.getRemotePort());
 		logEntry.setUsuario(params.getUsername());
-		logEntry.setFicheroDestino(params.getSourceFile());
-		logEntry.setFicheroOrigen(params.getDestination());
+		logEntry.setFicheroDestino(params.getDestination());
+		logEntry.setFicheroOrigen(params.getSourceFile());
 		logEntry.setBytesTransferidos(transferRequest.getTransferredBytes());
 		logEntry.setMilisegundosTranscurridos(transferRequest.getTimeElapsed());
 		logEntry.setCodigoRetorno(result);
