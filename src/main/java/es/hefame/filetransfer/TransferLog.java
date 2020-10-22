@@ -52,7 +52,7 @@ public class TransferLog {
 
 	public static void logException(Exception exception) {
 		try {
-			try (FileOutputStream fos = new FileOutputStream(logFile)) {
+			try (FileOutputStream fos = new FileOutputStream(logFile, true)) {
 				exception.printStackTrace(new PrintStream(fos));
 			}
 		} catch (Exception e) {
