@@ -55,6 +55,15 @@ then
     git stash
     git stash drop
 
+    if [ "$2" == "" ]
+    then
+        echo "$0 update <version>"
+        echo "Puede elegir entre una de las siguientes versiones:"
+        git tag --list 
+        echo "last - Actualizará a la ultima version (DESARROLLO)"
+        exit 0
+    fi
+
     if [ "$2" == "last" ]
     then
         echo "Moviendinos hasta la ultima version disponible de la aplicacion ..."
