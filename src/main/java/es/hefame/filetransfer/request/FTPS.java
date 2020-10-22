@@ -14,7 +14,12 @@ public class FTPS extends VFSTransfer {
 
 	protected FileSystemOptions getFileSystemOptions() {
 		FileSystemOptions opts = new FileSystemOptions();
-		FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(opts, FtpsMode.EXPLICIT);
+
+		if (params.getRemotePort() == 990) {
+			FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(opts, FtpsMode.IMPLICIT);
+		} else {
+			FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(opts, FtpsMode.EXPLICIT);
+		}
 		FtpsFileSystemConfigBuilder.getInstance().setPassiveMode(opts, true);
 		FtpsFileSystemConfigBuilder.getInstance().setConnectTimeout(opts, 10000);
 		return opts;
