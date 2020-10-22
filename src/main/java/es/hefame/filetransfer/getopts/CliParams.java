@@ -17,10 +17,11 @@ public class CliParams {
 	private String password;
 	private String sourceFile;
 	private String destination;
+	private String comment;
 	private Map<String, Object> extraParameters;
 
 	public CliParams(String[] cliArgs, TransferProtocol transferProtocol, TransferDirection direction, String remoteHost, int remotePort,
-			String username, String password, String sourceFile, String destination, Map<String, Object> extraParameters) {
+			String username, String password, String sourceFile, String destination, String comment, Map<String, Object> extraParameters) {
 		this.cliArgs = cliArgs;
 		this.transferProtocol = transferProtocol;
 		this.direction = direction;
@@ -30,6 +31,7 @@ public class CliParams {
 		this.password = password;
 		this.sourceFile = sourceFile;
 		this.destination = destination;
+		this.comment = comment;
 		this.extraParameters = extraParameters;
 	}
 
@@ -77,6 +79,10 @@ public class CliParams {
 
 	public String getDestination() {
 		return destination;
+	}
+
+	public String getComment() {
+		return comment;
 	}
 
 	public Map<String, Object> getExtraParameters() {

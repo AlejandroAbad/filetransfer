@@ -18,7 +18,7 @@ import es.hefame.filetransfer.request.TransferRequest;
 
 public class TransferLog {
 
-	private static File logFile = new File(System.getProperty("log"));;
+	private static File logFile = new File(System.getProperty("log"));
 	private static final String MONGOURI = System.getProperty("mongodb");
 	private static final boolean DEBUG = "true".equalsIgnoreCase(System.getProperty("debug"));
 
@@ -66,6 +66,7 @@ public class TransferLog {
 	private static class LogEntry {
 
 		private String argumentos;
+		private String comment;
 		private long timestamp;
 		private int codigoRetorno;
 		private String mensajeError;
@@ -99,6 +100,10 @@ public class TransferLog {
 				sb.append(args[i]);
 			}
 			this.argumentos = sb.toString();
+		}
+
+		public void setComment(String comment) {
+			this.comment = comment;
 		}
 
 		public void setCodigoRetorno(int codigoRetorno) {
@@ -167,19 +172,21 @@ public class TransferLog {
 			builder.append(codigoRetorno).append('|');
 			builder.append(claseError).append('|');
 			builder.append(mensajeError).append('|');
+			builder.append(comment).append('|');
 			builder.append(argumentos);
 			return builder.toString();
 		}
 
 		public Document toMDbObject() {
 			return new Document().append("timestamp", this.timestamp).append("argumentos", this.argumentos)
-					.append("protocolo", this.protocolo).append("sentidoTransmision", this.sentidoTransmision)
-					.append("hostLocal", this.hostLocal).append("osUser", this.osUser)
-					.append("workingDir", this.workingDir).append("hostDestino", this.hostDestino)
-					.append("puertoDestino", this.puertoDestino).append("usuario", this.usuario)
-					.append("ficheroOrigen", this.ficheroOrigen).append("ficheroDestino", this.ficheroDestino)
-					.append("codigoRetorno", this.codigoRetorno).append("claseError", this.claseError)
-					.append("mensajeError", this.mensajeError).append("bytesTransferidos", this.bytesTransferidos)
+					.append("comment", this.comment).append("protocolo", this.protocolo)
+					.append("sentidoTransmision", this.sentidoTransmision).append("hostLocal", this.hostLocal)
+					.append("osUser", this.osUser).append("workingDir", this.workingDir)
+					.append("hostDestino", this.hostDestino).append("puertoDestino", this.puertoDestino)
+					.append("usuario", this.usuario).append("ficheroOrigen", this.ficheroOrigen)
+					.append("ficheroDestino", this.ficheroDestino).append("codigoRetorno", this.codigoRetorno)
+					.append("claseError", this.claseError).append("mensajeError", this.mensajeError)
+					.append("bytesTransferidos", this.bytesTransferidos)
 					.append("milisegundosTranscurridos", this.milisegundosTranscurridos);
 		}
 	}
@@ -189,6 +196,7 @@ public class TransferLog {
 		LogEntry logEntry = new TransferLog.LogEntry();
 		CliParams params = transferRequest.getCliParams();
 		logEntry.setArgumentos(params.getCliArgs());
+		logEntry.setComment(params.getComment());
 		logEntry.setProtocolo(params.getTransferProtocol().name());
 		logEntry.setSentidoTransmision(params.getDirection().name());
 		logEntry.setHostDestino(params.getRemoteHost());
@@ -212,6 +220,7 @@ public class TransferLog {
 
 		if (params != null) {
 			logEntry.setArgumentos(params.getCliArgs());
+			logEntry.setComment(params.getComment());
 			logEntry.setProtocolo(params.getTransferProtocol().name());
 			logEntry.setSentidoTransmision(params.getDirection().name());
 			logEntry.setHostDestino(params.getRemoteHost());

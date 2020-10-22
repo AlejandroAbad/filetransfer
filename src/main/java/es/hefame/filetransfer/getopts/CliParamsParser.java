@@ -43,14 +43,16 @@ public class CliParamsParser {
 
 	private static final ExtendedLongOpt[] EXTENDED_LONG_OPTS = {
 			new ExtendedLongOpt('h', LongOpt.NO_ARGUMENT, "Muestra esta ayuda", "help"),
-			new ExtendedLongOpt('m', LongOpt.REQUIRED_ARGUMENT, "El método con el que realizar la transferencia [" + AVAILABLE_PROTOCOL_NAMES + "]", "protocol"),
+			new ExtendedLongOpt('m', LongOpt.REQUIRED_ARGUMENT, "El metodo con el que realizar la transferencia [" + AVAILABLE_PROTOCOL_NAMES + "]", "protocol"),
 			new ExtendedLongOpt('d', LongOpt.REQUIRED_ARGUMENT, "El sentido de la transferencia [" + AVAILABLE_DIRECTION_NAMES + "]", "direction"),
 			new ExtendedLongOpt('H', LongOpt.REQUIRED_ARGUMENT, "El host remoto al que conectar", "host"),
 			new ExtendedLongOpt('P', LongOpt.REQUIRED_ARGUMENT, "El puerto remoto al que conectar", "port"),
 			new ExtendedLongOpt('u', LongOpt.REQUIRED_ARGUMENT, "El usuario con el que hacer login en el host remoto", "user", "username"),
-			new ExtendedLongOpt('p', LongOpt.REQUIRED_ARGUMENT, "La contraseña del usuario", "pass", "password"),
+			new ExtendedLongOpt('p', LongOpt.REQUIRED_ARGUMENT, "La clave del usuario", "pass", "password"),
 			new ExtendedLongOpt('f', LongOpt.REQUIRED_ARGUMENT, "La ruta al fichero origen", "from"),
-			new ExtendedLongOpt('t', LongOpt.REQUIRED_ARGUMENT, "La ruta destino donde se almacenará el fichero transferido", "to") };
+			new ExtendedLongOpt('t', LongOpt.REQUIRED_ARGUMENT, "La ruta destino donde se almacenara el fichero transferido", "to"),
+			new ExtendedLongOpt('c',LongOpt.REQUIRED_ARGUMENT,"Un comentario que se almacenara en el log","comment")
+	};
 
 	public static CliParams parse(String... args) throws CliParseException {
 
@@ -95,10 +97,13 @@ public class CliParamsParser {
 			case 't':
 				paramsBuilder.setDestination(g.getOptarg());
 				break;
+			case 'c':
+				paramsBuilder.setComment(g.getOptarg());
+				break;
 			case ':':
-				throw new CliParseException("La opción '" + (char) g.getOptopt() + "' requiere un argumento");
+				throw new CliParseException("La opcion '" + (char) g.getOptopt() + "' requiere un argumento");
 			case '?':
-				throw new CliParseException("La opción '" + (char) g.getOptopt() + "' no se reconoce");
+				throw new CliParseException("La opcion '" + (char) g.getOptopt() + "' no se reconoce");
 			default:
 				break;
 			}

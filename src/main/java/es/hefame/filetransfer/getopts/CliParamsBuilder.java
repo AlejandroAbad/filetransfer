@@ -13,6 +13,7 @@ class CliParamsBuilder {
 	private String password;
 	private String sourceFile;
 	private String destination;
+	private String comment;
 
 	public CliParamsBuilder() {
 		//
@@ -75,6 +76,10 @@ class CliParamsBuilder {
 		this.destination = destination;
 	}
 
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 	public CliParams build(String[] cliArgs) throws CliParseException {
 
 		if (transferProtocol == null)
@@ -91,7 +96,7 @@ class CliParamsBuilder {
 
 		return new CliParams(
 				cliArgs, transferProtocol, direction, remoteHost, remotePort, username, password, sourceFile,
-				destination, null);
+				destination, comment, null);
 	}
 
 }
