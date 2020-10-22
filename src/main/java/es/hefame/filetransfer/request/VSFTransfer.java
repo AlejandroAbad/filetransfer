@@ -17,7 +17,7 @@ public abstract class VSFTransfer extends TransferRequest {
 		super(params);
 	}
 
-	protected abstract FileSystemOptions getFileSystemOptions() throws FileSystemException ;
+	protected abstract FileSystemOptions getFileSystemOptions() throws FileSystemException;
 
 	private String getRemotePath() {
 		return this.getRemotePath(false);
@@ -26,14 +26,21 @@ public abstract class VSFTransfer extends TransferRequest {
 	private String getRemotePath(boolean hidePassword) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(this.params.getTransferProtocol().name().toLowerCase()).append("://").append(params.getUsername())
-				.append(":").append(hidePassword ? "***" : params.getPassword()).append("@")
+				.append(':').append(hidePassword ? "***" : params.getPassword()).append('@')
 				.append(params.getRemoteHost());
 
+		String path = "";
 		if (params.getDirection() == TransferDirection.UPLOAD) {
-			sb.append(params.getDestination());
+			path = params.getDestination();
 		} else {
-			sb.append(params.getSourceFile());
+			path = params.getSourceFile();
 		}
+
+		if (!path.startsWith("/")) {
+			sb.append('/');
+		}
+
+		sb.append(path);
 
 		return sb.toString();
 	}
