@@ -16,15 +16,20 @@ git clone https://github.com/AlejandroAbad/filetransfer
 cd filetransfer
 cp filetransfer.sh.example filetransfer.sh
 chmod a+x filetransfer.sh
-./filetransfer.sh install
+mvn package
 ```
-Una vez instalada, ya tendremos disponible el comando `filetransfer` en el PATH (y el comando `ft` que es un alias !)
+
+Llegados a este punto, tenemos la aplicación compilada, nos falta configurarla
+según nuestras necesidades. Para ello, editaremos el fichero `filetransfer.sh`.
+
+Una vez configurado, ejecutaremos `./filetransfer.sh install`, una rutina
+que creará los enlaces necesarios para tener disponible el comando `filetransfer` en el PATH 
+(¡ y el comando `ft` que es un alias !)
+
 
 ## Actualización
 Ejecuta `filetransfer update` y la propia aplicación te mostrará el camino :)
 
-## Configuración
-La configuración de la aplicación se encuentra en el propio script `filetransfer.sh`.
 
 ## Uso
 ¡ Ejecuta `filetransfer --help` para una guía completa de parámetros !
