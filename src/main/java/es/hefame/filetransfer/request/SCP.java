@@ -22,12 +22,20 @@ public class SCP extends TransferRequest {
 	private Properties getTransferProperties() {
 		Properties config = new Properties();
 		config.put("StrictHostKeyChecking", "no");
+
 		return config;
 	}
 
 	private ChannelSftp getChannel() throws JSchException {
 
 		JSch jsch = new JSch();
+		try {
+			String privateKey = System.getProperty("user.home") + "/.ssh/id_rsa";
+			jsch.addIdentity(privateKey);
+		} catch (JSchException e) {
+			
+		}
+
 		int port = params.getRemotePort() == 0 ? 22 : params.getRemotePort();
 		Session session = jsch.getSession(params.getUsername(), params.getRemoteHost(), port);
 		session.setPassword(params.getPassword());
