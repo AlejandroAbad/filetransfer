@@ -115,6 +115,6 @@ then
 fi
 
 
-$JAVA $VMARGS -jar $JAR $*
+$JAVA $VMARGS -jar $JAR $* 2>/dev/null
 exit $?
 
