@@ -29,6 +29,10 @@ public abstract class VFSTransfer extends TransferRequest {
 				.append(':').append(hidePassword ? "***" : params.getPassword()).append('@')
 				.append(params.getRemoteHost());
 
+		if (params.getRemotePort() > 0) {
+			sb.append(':').append(params.getRemotePort());
+		}
+
 		String path = "";
 		if (params.getDirection() == TransferDirection.UPLOAD) {
 			path = params.getDestination();

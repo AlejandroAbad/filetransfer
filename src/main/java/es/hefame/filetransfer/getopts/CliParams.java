@@ -89,6 +89,50 @@ public class CliParams {
 		return this.extraParameters;
 	}
 
+	public void setCliArgs(String[] cliArgs) {
+		this.cliArgs = cliArgs;
+	}
+
+	public void setTransferProtocol(TransferProtocol transferProtocol) {
+		this.transferProtocol = transferProtocol;
+	}
+
+	public void setDirection(TransferDirection direction) {
+		this.direction = direction;
+	}
+
+	public void setRemoteHost(String remoteHost) {
+		this.remoteHost = remoteHost;
+	}
+
+	public void setRemotePort(int remotePort) {
+		this.remotePort = remotePort;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setSourceFile(String sourceFile) {
+		this.sourceFile = sourceFile;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public void setExtraParameters(Map<String, Object> extraParameters) {
+		this.extraParameters = extraParameters;
+	}
+
 	@Override
 	public String toString() {
 		return "CliParams [destination=" + destination + ", direction=" + direction + ", password=*******"
