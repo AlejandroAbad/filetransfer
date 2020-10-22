@@ -49,11 +49,7 @@ then
     CWD=$(pwd)
     cd $INSTALL_DIR
     
-    git config --global user.email "dummy@example.com"
-    git config --global user.name "Dummy"
-    git add -A .
-    git stash
-    git stash drop
+
 
     if [ "$2" == "" ]
     then
@@ -64,13 +60,19 @@ then
         exit 0
     fi
 
+    git config --global user.email "dummy@example.com" >/dev/null
+    git config --global user.name "Dummy" >/dev/null
+    git add -A . >/dev/null >/dev/null
+    git stash >/dev/null >/dev/null
+    git stash drop >/dev/null >/dev/null
+
     if [ "$2" == "last" ]
     then
         echo "Moviendinos hasta la ultima version disponible de la aplicacion ..."
         git pull origin main
     else
         echo "Moviendonos a la version '$2' de la aplicación ..."
-        git checkout tags/$2
+        git checkout tags/$2 
         if [ $? -ne 0 ]
         then
             echo "No se pudo mover a la version indicada." >&2
