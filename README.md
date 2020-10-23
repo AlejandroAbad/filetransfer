@@ -33,6 +33,3 @@ Ejecuta `filetransfer update` y la propia aplicación te mostrará el camino :)
 
 ## Uso
 ¡ Ejecuta `filetransfer --help` para una guía completa de parámetros !
-
-## Bugs conocidos
-- Cuando se especifica el puerto de destino, este se ignora y se utiliza el puerto por defecto para el protocolo especificado
