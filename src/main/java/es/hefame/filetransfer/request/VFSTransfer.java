@@ -7,9 +7,13 @@ import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.Selectors;
 import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.provider.UriParser;
 
 import es.hefame.filetransfer.TransferDirection;
 import es.hefame.filetransfer.getopts.CliParams;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public abstract class VFSTransfer extends TransferRequest {
 
@@ -19,19 +23,11 @@ public abstract class VFSTransfer extends TransferRequest {
 
 	protected abstract FileSystemOptions getFileSystemOptions() throws FileSystemException;
 
-	private String getRemotePath() {
+	private String getRemotePath() throws URISyntaxException {
 		return this.getRemotePath(false);
 	}
 
-	private String getRemotePath(boolean hidePassword) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.params.getTransferProtocol().name().toLowerCase()).append("://").append(params.getUsername())
-				.append(':').append(hidePassword ? "***" : params.getPassword()).append('@')
-				.append(params.getRemoteHost());
-
-		if (params.getRemotePort() > 0) {
-			sb.append(':').append(params.getRemotePort());
-		}
+	private String getRemotePath(boolean hidePassword) throws URISyntaxException {
 
 		String path = "";
 		if (params.getDirection() == TransferDirection.UPLOAD) {
@@ -39,14 +35,19 @@ public abstract class VFSTransfer extends TransferRequest {
 		} else {
 			path = params.getSourceFile();
 		}
-
 		if (!path.startsWith("/")) {
-			sb.append('/');
+			path = '/' + path;
 		}
 
-		sb.append(path);
+		String userInfo = params.getUsername();
+		if (params.getPassword() != null && params.getPassword().length() > 0) {
+			userInfo += ":" + (hidePassword ? "***" : UriParser.encode(params.getPassword()));
+		}
 
-		return sb.toString();
+		URI uri = new URI(params.getTransferProtocol().name().toLowerCase(), userInfo, params.getRemoteHost(),
+				(params.getRemotePort() > 0 ? params.getRemotePort() : -1), path, null, null);
+
+		return uri.toString();
 	}
 
 	private String convertToAbsolutePath(String path) {
