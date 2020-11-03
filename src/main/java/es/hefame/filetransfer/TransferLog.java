@@ -38,11 +38,12 @@ public class TransferLog {
 
 	public static void logToMongo(LogEntry logEntry) {
 		try {
-
-			try (MongoClient mongoClient = new MongoClient(new MongoClientURI(MONGOURI))) {
-				MongoDatabase database = mongoClient.getDatabase("fileTransfer");
-				MongoCollection<Document> collection = database.getCollection("transferencias");
-				collection.insertOne(logEntry.toMDbObject());
+			if (MONGOURI != null && MONGOURI.length() > 0) {
+				try (MongoClient mongoClient = new MongoClient(new MongoClientURI(MONGOURI))) {
+					MongoDatabase database = mongoClient.getDatabase("fileTransfer");
+					MongoCollection<Document> collection = database.getCollection("transferencias");
+					collection.insertOne(logEntry.toMDbObject());
+				}
 			}
 		} catch (Exception e) {
 			logException(e);
