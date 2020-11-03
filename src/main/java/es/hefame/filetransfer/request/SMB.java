@@ -71,6 +71,7 @@ public class SMB extends TransferRequest {
 		return SmbConfig.builder()
 				.withTimeout(60, TimeUnit.SECONDS)
 				.withSoTimeout(90, TimeUnit.SECONDS)
+				.withDfsEnabled(true)
 				.build();
 	}
 
@@ -178,7 +179,7 @@ public class SMB extends TransferRequest {
 		try {
 			try (SMBClient client = new SMBClient(getConnectionConfig())) {
 				try (Connection connection = client.connect(params.getRemoteHost())) {
-
+						
 					Session session = getSession(connection);
 
 					String remoteShareName = getShareName(params.getDestination());
