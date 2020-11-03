@@ -37,11 +37,11 @@ public final class App {
             System.out.println("2: " + e.getMessage());
             TransferLog.logTransfer(args, params, 2, e);
             System.exit(2);
-        } catch (InstantiationException e) {
-            System.out.println("3: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("3: " + "[" + e.getClass().getName() + "] " + e.getMessage());
             TransferLog.logTransfer(args, params, 3, e);
             System.exit(3);
-        }
+        } 
 
         
     }
