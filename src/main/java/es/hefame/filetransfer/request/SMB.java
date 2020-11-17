@@ -116,7 +116,12 @@ public class SMB extends TransferRequest {
 			// Si la excepción es STATUS_FILE_IS_A_DIRECTORY (0xC00000BA = 3221225658L)
 			// Es porque el destino es un directiorio y por tanto indicamos el nombre del fichero origen
 			if (e.getStatusCode() == 0xC00000BAL) {
-				remoteFilePath += "/" + params.getSourceFileName();
+				
+				// Si estamos intentando escribir en el directorio raiz del share, no debemos incluir una / inicial
+				// o la ruta resultante será del estilo \\<server>\<share>\\<file>, lo cual da error STATUS_INVALID_PARAMETER
+				if (remoteFilePath.length() > 0) remoteFilePath += "/";
+				remoteFilePath += params.getSourceFileName();
+				
 				return share.openFile(remoteFilePath, accessMask, fileAttributes, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OVERWRITE_IF, createOptions);
 			}
 			throw e;
