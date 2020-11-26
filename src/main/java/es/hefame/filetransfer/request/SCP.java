@@ -30,10 +30,12 @@ public class SCP extends TransferRequest {
 
 		JSch jsch = new JSch();
 		try {
-			String privateKey = System.getProperty("user.home") + "/.ssh/id_rsa";
-			jsch.addIdentity(privateKey);
+			if (this.params.getPassword().length() == 0) {
+				String privateKey = System.getProperty("user.home") + "/.ssh/id_rsa";
+				jsch.addIdentity(privateKey);
+			}
 		} catch (JSchException e) {
-			
+
 		}
 
 		int port = params.getRemotePort() == 0 ? 22 : params.getRemotePort();

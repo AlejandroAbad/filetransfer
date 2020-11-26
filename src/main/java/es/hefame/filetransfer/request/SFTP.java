@@ -20,11 +20,14 @@ public class SFTP extends VFSTransfer {
 
 		FileSystemOptions opts = new FileSystemOptions();
 
-		// 
-		File sshKeyFile = new File( System.getProperty("user.home") + "/.ssh/id_rsa");
-		if (sshKeyFile.exists()) {
-			IdentityProvider ip = new IdentityInfo(sshKeyFile);
-			SftpFileSystemConfigBuilder.getInstance().setIdentityProvider(opts, ip);
+		// Si la password viene vacía, intentamos utilizar la clave SSH del usuario
+		// en la ubicación por defecto ~/.ssh/id_rsa.
+		if (this.params.getPassword().length() == 0) {
+			File sshKeyFile = new File(System.getProperty("user.home") + "/.ssh/id_rsa");
+			if (sshKeyFile.exists()) {
+				IdentityProvider ip = new IdentityInfo(sshKeyFile);
+				SftpFileSystemConfigBuilder.getInstance().setIdentityProvider(opts, ip);
+			}
 		}
 
 		SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(opts, "no");
