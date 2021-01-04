@@ -30,9 +30,12 @@ public class SFTP extends VFSTransfer {
 			}
 		}
 
+
+
 		SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(opts, "no");
-		SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, false);
+		SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, true);
 		SftpFileSystemConfigBuilder.getInstance().setSessionTimeoutMillis(opts, 10000);
+		SftpFileSystemConfigBuilder.getInstance().setConnectTimeoutMillis(opts, 10000);
 
 		return opts;
 	}
