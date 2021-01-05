@@ -30,7 +30,7 @@ public class SCP extends TransferRequest {
 
 		JSch jsch = new JSch();
 		try {
-			if (this.params.getPassword().length() == 0) {
+			if (this.params.getPassword() == null || this.params.getPassword().length() == 0) {
 				String privateKey = System.getProperty("user.home") + "/.ssh/id_rsa";
 				jsch.addIdentity(privateKey);
 			}
